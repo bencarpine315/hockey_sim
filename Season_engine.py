@@ -7,13 +7,9 @@ df.to_csv("NHLplayers.csv", index=False)
 #####################
 #   Lines 1-4 are offensive
 #   Lines 5-7 are defensive
-#   Lines 8 and beyond are goalies
+#   Lines 8 and 9 are goalies
 #   Line 0 is scratched players
 #####################
-
-bos = "bos"
-tor = "tor"
-ott = "ott"
 
 bos_line1 = df[(df["Line"] == 1) & (df["Team"] == "BOS")]
 bos_line2 = df[(df["Line"] == 2) & (df["Team"] == "BOS")]
@@ -24,6 +20,7 @@ bos_line6 = df[(df["Line"] == 6) & (df["Team"] == "BOS")]
 bos_line7 = df[(df["Line"] == 7) & (df["Team"] == "BOS")]
 bos_line8 = df[(df["Line"] == 8) & (df["Team"] == "BOS")]
 bos_line9 = df[(df["Line"] == 9) & (df["Team"] == "BOS")]
+bos = [bos_line1, bos_line2, bos_line3, bos_line4, bos_line5, bos_line6, bos_line7, bos_line8, bos_line9, "Boston", "Bruins"]
 
 tor_line1 = df[(df["Line"] == 1) & (df["Team"] == "TOR")]
 tor_line2 = df[(df["Line"] == 2) & (df["Team"] == "TOR")]
@@ -34,6 +31,7 @@ tor_line6 = df[(df["Line"] == 6) & (df["Team"] == "TOR")]
 tor_line7 = df[(df["Line"] == 7) & (df["Team"] == "TOR")]
 tor_line8 = df[(df["Line"] == 8) & (df["Team"] == "TOR")]
 tor_line9 = df[(df["Line"] == 9) & (df["Team"] == "TOR")]
+tor = [tor_line1, tor_line2, tor_line3, tor_line4, tor_line5, tor_line6, tor_line7, tor_line8, tor_line9, "Toronto", "Maple Leafs"]
 
 ott_line1 = df[(df["Line"] == 1) & (df["Team"] == "OTT")]
 ott_line2 = df[(df["Line"] == 2) & (df["Team"] == "OTT")]
@@ -44,30 +42,48 @@ ott_line6 = df[(df["Line"] == 6) & (df["Team"] == "OTT")]
 ott_line7 = df[(df["Line"] == 7) & (df["Team"] == "OTT")]
 ott_line8 = df[(df["Line"] == 8) & (df["Team"] == "OTT")]
 ott_line9 = df[(df["Line"] == 9) & (df["Team"] == "OTT")]
+ott = [ott_line1, ott_line2, ott_line3, ott_line4, ott_line5, ott_line6, ott_line7, ott_line8, ott_line9, "Ottawa", "Senators"]
 
+teams = {
+    "bos" : bos,
+    "tor" : tor,
+    "ott" : ott
+}
 
+def single_game(teams: dict, teama: str, teamb: str):
+    for key,value in teams.items():
+        if teama == key:
+            team1 = value
+            break
+        else:
+            continue
+    for key,value in teams.items():
+        if teamb == key:
+            team2 = value
+            break
+        else:
+            continue
+    first_line = gameplay(team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], 0, 0, 0, team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], 0, 0, 20*60, [], False, False)
+    second_line = gameplay(team1[1], team1[5], team2[1], team2[5], team1[7], team2[7], 0, 0, 0, team1[1], team1[5], team2[1], team2[5], team1[7], team2[7], 0, 0, 17*60, [], False, False)
+    third_line = gameplay(team1[2], team1[6], team2[2], team2[6], team1[7], team2[7], 0, 0, 0, team1[2], team1[6], team2[2], team2[6], team1[7], team2[7], 0, 0, 15*60, [], False, False)
+    fourth_line_1 = gameplay(team1[3], team1[4], team2[3], team2[4], team1[7], team2[7], 0, 0, 0, team1[3], team1[4], team2[3], team2[4], team1[7], team2[7], 0, 0, 4*60, [], False, False)
+    fourth_line_2 = gameplay(team1[3], team1[5], team2[3], team2[5], team1[7], team2[7], 0, 0, 0, team1[3], team1[5], team2[3], team2[5], team1[7], team2[7], 0, 0, 3*60, [], False, False)
+    fourth_line_3 = gameplay(team1[3], team1[6], team2[3], team2[6], team1[7], team2[7], 0, 0, 0, team1[3], team1[6], team2[3], team2[6], team1[7], team2[7], 0, 0, 2*60, [], False, False)
 
-first_line = gameplay(bos_line1, bos_line5, tor_line1, tor_line5, bos_line8, tor_line8, 0, 0, 0, bos_line1, bos_line5, tor_line1, tor_line5, bos_line8, tor_line8, 0, 0, 20*60, [], False, False)
-second_line = gameplay(bos_line2, bos_line6, tor_line2, tor_line6, bos_line8, tor_line8, 0, 0, 0, bos_line2, bos_line6, tor_line2, tor_line6, bos_line8, tor_line8, 0, 0, 17*60, [], False, False)
-third_line = gameplay(bos_line3, bos_line7, tor_line3, tor_line7, bos_line8, tor_line8, 0, 0, 0, bos_line3, bos_line7, tor_line3, tor_line7, bos_line8, tor_line8, 0, 0, 15*60, [], False, False)
-fourth_line_1 = gameplay(bos_line4, bos_line5, tor_line4, tor_line5, bos_line8, tor_line8, 0, 0, 0, bos_line4, bos_line5, tor_line4, tor_line5, bos_line8, tor_line8, 0, 0, 4*60, [], False, False)
-fourth_line_2 = gameplay(bos_line4, bos_line6, tor_line4, tor_line6, bos_line8, tor_line8, 0, 0, 0, bos_line4, bos_line6, tor_line4, tor_line6, bos_line8, tor_line8, 0, 0, 3*60, [], False, False)
-fourth_line_3 = gameplay(bos_line4, bos_line7, tor_line4, tor_line7, bos_line8, tor_line8, 0, 0, 0, bos_line4, bos_line7, tor_line4, tor_line7, bos_line8, tor_line8, 0, 0, 2*60, [], False, False)
+    team_1_score = first_line[0]+second_line[0]+third_line[0]+fourth_line_1[0]+fourth_line_2[0]+fourth_line_3[0]
+    team_2_score = first_line[1]+second_line[1]+third_line[1]+fourth_line_1[1]+fourth_line_2[1]+fourth_line_3[1]
+    team_1_shots = first_line[2]+second_line[2]+third_line[2]+fourth_line_1[2]+fourth_line_2[2]+fourth_line_3[2]
+    team_2_shots = first_line[3]+second_line[3]+third_line[3]+fourth_line_1[3]+fourth_line_2[3]+fourth_line_3[3]
 
+    print(f"{team1[9]} scored {team_1_score} on {team_1_shots} shots and {team2[9]} scored {team_2_score} on {team_2_shots} shots at the end of regulation.")
+    
+    if team_1_score == team_2_score:
+        ot_line = ot_gameplay(team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], 0, 0, 0, team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], 0, 0, 300, [], False, True)
+        team_1_score += ot_line[0]
+        team_2_score += ot_line[1]
+        team_1_shots += ot_line[2]
+        team_2_shots += ot_line[3]
+        print(f"Overtime elapsed: {ot_line[4]}")
+        print(f"{team1[9]} scored {team_1_score} on {team_1_shots} shots and {team2[9]} scored {team_2_score} on {team_2_shots} shots at the end of overtime.")
 
-bos_score = first_line[0]+second_line[0]+third_line[0]+fourth_line_1[0]+fourth_line_2[0]+fourth_line_3[0]
-tor_score = first_line[1]+second_line[1]+third_line[1]+fourth_line_1[1]+fourth_line_2[1]+fourth_line_3[1]
-bos_shots = first_line[2]+second_line[2]+third_line[2]+fourth_line_1[2]+fourth_line_2[2]+fourth_line_3[2]
-tor_shots = first_line[3]+second_line[3]+third_line[3]+fourth_line_1[3]+fourth_line_2[3]+fourth_line_3[3]
-print(f"Bruins scored {bos_score} on {bos_shots} shots and Maple Leafs scored {tor_score} on {tor_shots} shots at the end of regulation.")
-
-
-if bos_score == tor_score:
-    ot_line = ot_gameplay(bos_line1, bos_line5, tor_line1, tor_line5, bos_line8, tor_line8, 0, 0, 0, bos_line1, bos_line5, tor_line1, tor_line5, bos_line8, tor_line8, 0, 0, 300, [], False, True)
-    bos_score += ot_line[0]
-    tor_score += ot_line[1]
-    bos_shots += ot_line[2]
-    tor_shots += ot_line[3]
-    print(f"Overtime elapsed: {ot_line[4]}")
-    print(f"Bruins scored {bos_score} on {bos_shots} shots and Maple Leafs scored {tor_score} on {tor_shots} shots at the end of overtime.")
-
+single_game(teams, "ott", "bos")
