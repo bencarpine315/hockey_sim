@@ -90,17 +90,19 @@ def make_list(kinda_list):
         newlist.append(player_name)
     return newlist
 
-def powerplay(a_team_opp, a_team_dpp, b_team_opk, b_team_dpk, a_team_g, b_team_g, a_team_opp_ref, a_team_dpp_ref, b_team_opk_ref, b_team_dpk_ref, a_shots, b_shots, shift_time, assists: list, just_scored: bool, my_event_roll_modifier=1, my_shot_mod=1):
+def powerplay(a_team_opp, a_team_dpp, b_team_opk, b_team_dpk, a_team_g, b_team_g, a_team_opp_ref, a_team_dpp_ref, b_team_opk_ref, b_team_dpk_ref, a_shots : list, b_shots : list, shift_time, assists: list, just_scored: bool, my_event_roll_modifier=1, my_shot_mod=1):
     # Will eventually allow for two-minute PPs #
     # Penalties will occur randomly based off of discipline/awareness rating, yet to be added #
     
     pass
     
+def shootout(a_team_shooters, b_team_shooters, a_team_g, b_team_g):
+    pass
 
     
-def gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, time, team_a_score, team_b_score, a_team_o_ref, a_team_d_ref, b_team_o_ref, b_team_d_ref, a_team_g_ref, b_team_g_ref, a_shots, b_shots, shift_time, assists: list, just_scored: bool, overtime: bool, my_event_roll_modifier=1, my_shot_mod=1):
+def gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, time, team_a_score : list, team_b_score : list, a_team_o_ref, a_team_d_ref, b_team_o_ref, b_team_d_ref, a_team_g_ref, b_team_g_ref, a_shots : list, b_shots : list, shift_time, assists: list, just_scored: bool, overtime: bool, my_event_roll_modifier=1, my_shot_mod=1):
     if (time == 0 or just_scored == True) and overtime==True and team_a_score != team_b_score:
-        return team_a_score, team_b_score, a_shots, b_shots, time
+        return len(team_a_score), len(team_b_score), len(a_shots), len(b_shots), time
     elif time == 0 or just_scored == True:
         time += 3
         if faceoff(a_team_o, b_team_o)=='A':
@@ -123,7 +125,7 @@ def gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, time, t
         # print(f'Bruins shot the puck {a_shots} times, and Maple Leafs shot it {b_shots} times.')
         # print(f"The debug values are as follows: team_a_score = {team_a_score}, team_b_score = {team_b_score}, a_shots = {a_shots}, b_shots = {b_shots}, time = {time}")
         # print(team_a_score, team_b_score)
-        return team_a_score, team_b_score, a_shots, b_shots, time
+        return len(team_a_score), len(team_b_score), len(a_shots), len(b_shots), time
     else:
         b_team_g_row = b_team_g.iloc[0]
         check_event = event_roll(a_team_o, b_team_o, a_team_d, b_team_d, my_event_roll_modifier)
@@ -162,11 +164,11 @@ def gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, time, t
                         print(f'{guy["Name"]} {guy["Surname"]} ({guy["POS"]}, {guy["Team"]})  gets an assist.')
                     print('\n')
                     if player['PlayerID'] in a_team_o_ref['PlayerID'].values or player['PlayerID'] in a_team_d_ref['PlayerID'].values:
-                        a_shots +=1
-                        team_a_score +=1
+                        a_shots.append(1)
+                        team_a_score.append(1)
                     elif player['PlayerID'] in b_team_o_ref['PlayerID'].values or player['PlayerID'] in b_team_d_ref['PlayerID'].values:
-                        b_shots +=1
-                        team_b_score +=1
+                        b_shots.append(1)
+                        team_b_score.append(1)
                 return gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, time, team_a_score, team_b_score, a_team_o_ref, a_team_d_ref, b_team_o_ref, b_team_d_ref, a_team_g_ref, b_team_g_ref, a_shots, b_shots, shift_time, [], True,overtime)
             else:
                 time += rand.randint(5,8)
@@ -180,18 +182,18 @@ def gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, time, t
                     # print("Rebound gets loose! Puck is up for grabs")
                     time += rand.randint(5,8)
                     if player['PlayerID'] in a_team_o_ref['PlayerID'].values or player['PlayerID'] in a_team_d_ref['PlayerID'].values:
-                        a_shots += 1
+                        a_shots.append(1)
                         # return gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, time, team_a_score, team_b_score, a_team_o_ref, a_team_d_ref, b_team_o_ref, b_team_d_ref, a_team_g_ref, b_team_g_ref, a_shots, b_shots, shift_time, assists, 1)
                     elif player['PlayerID'] in b_team_o_ref['PlayerID'].values or player['PlayerID'] in b_team_d_ref['PlayerID'].values:
-                        b_shots += 1
+                        b_shots.append(1)
                     return gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, time, team_a_score, team_b_score, a_team_o_ref, a_team_d_ref, b_team_o_ref, b_team_d_ref, a_team_g_ref, b_team_g_ref, a_shots, b_shots, shift_time, new_assists, False,overtime, my_event_roll_modifier*0.9, my_shot_mod*1.11)
                 else:
                     # print("The puck is stopped and play will resume after a faceoff.")
                     if player['PlayerID'] in a_team_o_ref['PlayerID'].values or player['PlayerID'] in a_team_d_ref['PlayerID'].values:
-                        a_shots+=1
+                        a_shots.append(1)
                         # return gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, time, team_a_score, team_b_score, a_team_o_ref, a_team_d_ref, b_team_o_ref, b_team_d_ref, a_team_g_ref, b_team_g_ref, a_shots+1, b_shots, shift_time, new_assists, False)
                     elif player['PlayerID'] in b_team_o_ref['PlayerID'].values or player['PlayerID'] in b_team_d_ref['PlayerID'].values:
-                        b_shots+=1
+                        b_shots.append(1)
                     return gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, time, team_a_score, team_b_score, a_team_o_ref, a_team_d_ref, b_team_o_ref, b_team_d_ref, a_team_g_ref, b_team_g_ref, a_shots, b_shots, shift_time, [], True,overtime)
         elif check_event == False:
             time += rand.randint(7,10)

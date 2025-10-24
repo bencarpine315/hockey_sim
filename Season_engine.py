@@ -44,10 +44,26 @@ ott_line8 = df[(df["Line"] == 8) & (df["Team"] == "OTT")]
 ott_line9 = df[(df["Line"] == 9) & (df["Team"] == "OTT")]
 ott = [ott_line1, ott_line2, ott_line3, ott_line4, ott_line5, ott_line6, ott_line7, ott_line8, ott_line9, "Ottawa", "Senators"]
 
+buf_line1 = df[(df["Line"] == 1) & (df["Team"] == "BUF")]
+buf_line2 = df[(df["Line"] == 2) & (df["Team"] == "BUF")]
+buf_line3 = df[(df["Line"] == 3) & (df["Team"] == "BUF")]
+buf_line4 = df[(df["Line"] == 4) & (df["Team"] == "BUF")]
+buf_line5 = df[(df["Line"] == 5) & (df["Team"] == "BUF")]
+buf_line6 = df[(df["Line"] == 6) & (df["Team"] == "BUF")]
+buf_line7 = df[(df["Line"] == 7) & (df["Team"] == "BUF")]
+buf_line8 = df[(df["Line"] == 8) & (df["Team"] == "BUF")]
+buf_line9 = df[(df["Line"] == 9) & (df["Team"] == "BUF")]
+buf = [buf_line1, buf_line2, buf_line3, buf_line4, buf_line5, buf_line6, buf_line7, buf_line8, buf_line9, "Buffalo", "Sabres"]
+
+
+
+
+
 teams = {
     "bos" : bos,
     "tor" : tor,
-    "ott" : ott
+    "ott" : ott,
+    "buf" : buf
 }
 
 def single_game(teams: dict, teama: str, teamb: str):
@@ -63,12 +79,12 @@ def single_game(teams: dict, teama: str, teamb: str):
             break
         else:
             continue
-    first_line = gameplay(team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], 0, 0, 0, team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], 0, 0, 20*60, [], False, False)
-    second_line = gameplay(team1[1], team1[5], team2[1], team2[5], team1[7], team2[7], 0, 0, 0, team1[1], team1[5], team2[1], team2[5], team1[7], team2[7], 0, 0, 17*60, [], False, False)
-    third_line = gameplay(team1[2], team1[6], team2[2], team2[6], team1[7], team2[7], 0, 0, 0, team1[2], team1[6], team2[2], team2[6], team1[7], team2[7], 0, 0, 15*60, [], False, False)
-    fourth_line_1 = gameplay(team1[3], team1[4], team2[3], team2[4], team1[7], team2[7], 0, 0, 0, team1[3], team1[4], team2[3], team2[4], team1[7], team2[7], 0, 0, 4*60, [], False, False)
-    fourth_line_2 = gameplay(team1[3], team1[5], team2[3], team2[5], team1[7], team2[7], 0, 0, 0, team1[3], team1[5], team2[3], team2[5], team1[7], team2[7], 0, 0, 3*60, [], False, False)
-    fourth_line_3 = gameplay(team1[3], team1[6], team2[3], team2[6], team1[7], team2[7], 0, 0, 0, team1[3], team1[6], team2[3], team2[6], team1[7], team2[7], 0, 0, 2*60, [], False, False)
+    first_line = gameplay(team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], 0, [], [], team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], [], [], 20*60, [], False, False)
+    second_line = gameplay(team1[1], team1[5], team2[1], team2[5], team1[7], team2[7], 0, [], [], team1[1], team1[5], team2[1], team2[5], team1[7], team2[7], [], [], 17*60, [], False, False)
+    third_line = gameplay(team1[2], team1[6], team2[2], team2[6], team1[7], team2[7], 0, [], [], team1[2], team1[6], team2[2], team2[6], team1[7], team2[7], [], [], 15*60, [], False, False)
+    fourth_line_1 = gameplay(team1[3], team1[4], team2[3], team2[4], team1[7], team2[7], 0, [], [], team1[3], team1[4], team2[3], team2[4], team1[7], team2[7], [], [], 4*60, [], False, False)
+    fourth_line_2 = gameplay(team1[3], team1[5], team2[3], team2[5], team1[7], team2[7], 0, [], [], team1[3], team1[5], team2[3], team2[5], team1[7], team2[7], [], [], 3*60, [], False, False)
+    fourth_line_3 = gameplay(team1[3], team1[6], team2[3], team2[6], team1[7], team2[7], 0, [], [], team1[3], team1[6], team2[3], team2[6], team1[7], team2[7], [], [], 2*60, [], False, False)
 
     team_1_score = first_line[0]+second_line[0]+third_line[0]+fourth_line_1[0]+fourth_line_2[0]+fourth_line_3[0]
     team_2_score = first_line[1]+second_line[1]+third_line[1]+fourth_line_1[1]+fourth_line_2[1]+fourth_line_3[1]
@@ -78,7 +94,7 @@ def single_game(teams: dict, teama: str, teamb: str):
     print(f"{team1[9]} scored {team_1_score} on {team_1_shots} shots and {team2[9]} scored {team_2_score} on {team_2_shots} shots at the end of regulation.")
     
     if team_1_score == team_2_score:
-        ot_line = ot_gameplay(team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], 0, 0, 0, team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], 0, 0, 300, [], False, True)
+        ot_line = ot_gameplay(team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], 0, [], [], team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], [], [], 300, [], False, True)
         team_1_score += ot_line[0]
         team_2_score += ot_line[1]
         team_1_shots += ot_line[2]
@@ -86,4 +102,4 @@ def single_game(teams: dict, teama: str, teamb: str):
         print(f"Overtime elapsed: {ot_line[4]}")
         print(f"{team1[9]} scored {team_1_score} on {team_1_shots} shots and {team2[9]} scored {team_2_score} on {team_2_shots} shots at the end of overtime.")
 
-single_game(teams, "tor", "ott") ## Test case
+single_game(teams, "bos", "buf") ## Test case
