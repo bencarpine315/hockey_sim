@@ -1,4 +1,4 @@
-from Hockey_sim_engine import gameplay, ot_gameplay, new_gameplay
+from Hockey_sim_engine import new_gameplay
 import pandas as pd
 
 df = pd.read_excel("NHLplayers.xlsx")
@@ -54,10 +54,6 @@ buf_line7 = df[(df["Line"] == 7) & (df["Team"] == "BUF")]
 buf_line8 = df[(df["Line"] == 8) & (df["Team"] == "BUF")]
 buf_line9 = df[(df["Line"] == 9) & (df["Team"] == "BUF")]
 buf = [buf_line1, buf_line2, buf_line3, buf_line4, buf_line5, buf_line6, buf_line7, buf_line8, buf_line9, "Buffalo", "Sabres"]
-
-
-
-
 
 teams = {
     "bos" : bos,
