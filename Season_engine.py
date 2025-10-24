@@ -1,4 +1,4 @@
-from Hockey_sim_engine import gameplay, ot_gameplay
+from Hockey_sim_engine import gameplay, ot_gameplay, new_gameplay
 import pandas as pd
 
 df = pd.read_excel("NHLplayers.xlsx")
@@ -79,12 +79,12 @@ def single_game(teams: dict, teama: str, teamb: str):
             break
         else:
             continue
-    first_line = gameplay(team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], 0, [], [], team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], [], [], 20*60, [], False, False)
-    second_line = gameplay(team1[1], team1[5], team2[1], team2[5], team1[7], team2[7], 0, [], [], team1[1], team1[5], team2[1], team2[5], team1[7], team2[7], [], [], 17*60, [], False, False)
-    third_line = gameplay(team1[2], team1[6], team2[2], team2[6], team1[7], team2[7], 0, [], [], team1[2], team1[6], team2[2], team2[6], team1[7], team2[7], [], [], 15*60, [], False, False)
-    fourth_line_1 = gameplay(team1[3], team1[4], team2[3], team2[4], team1[7], team2[7], 0, [], [], team1[3], team1[4], team2[3], team2[4], team1[7], team2[7], [], [], 4*60, [], False, False)
-    fourth_line_2 = gameplay(team1[3], team1[5], team2[3], team2[5], team1[7], team2[7], 0, [], [], team1[3], team1[5], team2[3], team2[5], team1[7], team2[7], [], [], 3*60, [], False, False)
-    fourth_line_3 = gameplay(team1[3], team1[6], team2[3], team2[6], team1[7], team2[7], 0, [], [], team1[3], team1[6], team2[3], team2[6], team1[7], team2[7], [], [], 2*60, [], False, False)
+    first_line = new_gameplay(team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], 20*60, False)
+    second_line = new_gameplay(team1[1], team1[5], team2[1], team2[5], team1[7], team2[7], 17*60, False)
+    third_line = new_gameplay(team1[2], team1[6], team2[2], team2[6], team1[7], team2[7], 15*60, False)
+    fourth_line_1 = new_gameplay(team1[3], team1[4], team2[3], team2[4], team1[7], team2[7], 4*60, False)
+    fourth_line_2 = new_gameplay(team1[3], team1[5], team2[3], team2[5], team1[7], team2[7], 3*60, False)
+    fourth_line_3 = new_gameplay(team1[3], team1[6], team2[3], team2[6], team1[7], team2[7], 2*60, False)
 
     team_1_score = first_line[0]+second_line[0]+third_line[0]+fourth_line_1[0]+fourth_line_2[0]+fourth_line_3[0]
     team_2_score = first_line[1]+second_line[1]+third_line[1]+fourth_line_1[1]+fourth_line_2[1]+fourth_line_3[1]
@@ -94,7 +94,7 @@ def single_game(teams: dict, teama: str, teamb: str):
     print(f"{team1[9]} scored {team_1_score} on {team_1_shots} shots and {team2[9]} scored {team_2_score} on {team_2_shots} shots at the end of regulation.")
     
     if team_1_score == team_2_score:
-        ot_line = ot_gameplay(team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], 0, [], [], team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], [], [], 300, [], False, True)
+        ot_line = new_gameplay(team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], 300, True)
         team_1_score += ot_line[0]
         team_2_score += ot_line[1]
         team_1_shots += ot_line[2]
@@ -102,4 +102,6 @@ def single_game(teams: dict, teama: str, teamb: str):
         print(f"Overtime elapsed: {ot_line[4]}")
         print(f"{team1[9]} scored {team_1_score} on {team_1_shots} shots and {team2[9]} scored {team_2_score} on {team_2_shots} shots at the end of overtime.")
 
-single_game(teams, "bos", "buf") ## Test case
+# single_game(teams, "bos", "buf") ## Test case
+
+single_game(teams, "bos", "tor")
