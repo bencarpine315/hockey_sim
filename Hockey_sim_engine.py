@@ -3,8 +3,8 @@ import random as rand
 import math
 import numpy as np
 
-df = pd.read_excel("C:\\users\\benca\\Desktop\\Personal Projects\\My own python stuff\\Hockey Sim\\NHL team.xlsx")
-df.to_csv("C:\\users\\benca\\Desktop\\Personal Projects\\My own python stuff\\Hockey Sim\\NHL team.csv", index=False)
+df = pd.read_excel("NHLplayers.xlsx")
+df.to_csv("NHLplayers.csv", index=False)
 
 def faceoff(off_line_a, off_line_b):
     a_center = off_line_a[off_line_a["POS"] == 'C']

@@ -1,7 +1,8 @@
 from Hockey_sim_engine import gameplay, ot_gameplay
 import pandas as pd
 
-df = pd.read_csv("C:\\users\\benca\\Desktop\\Personal Projects\\My own python stuff\\Hockey Sim\\NHL team.csv")
+df = pd.read_excel("NHLplayers.xlsx")
+df.to_csv("NHLplayers.csv", index=False)
 
 #####################
 #   Lines 1-4 are offensive
