@@ -3,10 +3,6 @@ import random as rand
 import math
 import numpy as np
 
-
-#### POOOOP
-
-
 df = pd.read_excel("C:\\users\\benca\\Desktop\\Personal Projects\\My own python stuff\\Hockey Sim\\NHL team.xlsx")
 df.to_csv("C:\\users\\benca\\Desktop\\Personal Projects\\My own python stuff\\Hockey Sim\\NHL team.csv", index=False)
 
