@@ -42,44 +42,44 @@ def get_pos(off_line, def_line, pos):
 def pass_or_shoot(player):
     if player["PlayerType"] == "SNP":
         shot_threshold = 45
-        event_mod = 0.7
-        shot_mod = 1
+        event_mod = 0.6
+        shot_mod = 1.005
     elif player["PlayerType"] == "PLY":
         shot_threshold = 15
-        event_mod = 0.45
-        shot_mod = 1.1
+        event_mod = 0.35
+        shot_mod = 1.11
     elif player["PlayerType"] == "TWF":
-        shot_threshold = 30
-        event_mod = 0.6
-        shot_mod = 1.05
+        shot_threshold = 35
+        event_mod = 0.5
+        shot_mod = 1.06
     elif player["PlayerType"] == "PWF":
-        shot_threshold = 25
-        event_mod = 0.625
+        shot_threshold = 30
+        event_mod = 0.525
         shot_mod = 1.03
     elif player["PlayerType"] == "ENF":
-        shot_threshold = 15
-        event_mod = 0.65
+        shot_threshold = 20
+        event_mod = 0.55
         shot_mod = 1.01
     elif player["PlayerType"] == "OFD":
-        shot_threshold = 20
-        event_mod = 0.675
-        shot_mod = 1.06
+        shot_threshold = 25
+        event_mod = 0.575
+        shot_mod = 1.04
     elif player["PlayerType"] == "TWD":
-        shot_threshold = 10
-        event_mod = 0.775
-        shot_mod = 1.03
+        shot_threshold = 12
+        event_mod = 0.675
+        shot_mod = 1.02
     elif player["PlayerType"] == "DFD":
         shot_threshold = 5
-        event_mod = 0.8
-        shot_mod = 1
-    shot_chance = rand.randint(0, 60)
+        event_mod = 0.7
+        shot_mod = 1.005
+    shot_chance = rand.randint(0, 50)
     return shot_chance < shot_threshold, event_mod, shot_mod
 
 def shot(player, goalie, shot_mod=1):
     goalie_row = goalie.iloc[0]
     shot_sum = math.ceil(goalie_row["Goaltend"] + (0.075 * shot_mod * player["Shooting"]))
-    shot_roll = rand.randint(0, shot_sum)
-    if shot_roll < goalie_row["Goaltend"]:
+    shot_roll = math.ceil(rand.randint(0, shot_sum))
+    if int(shot_roll) < int(goalie_row["Goaltend"])+1:
         return False
     else:
         return True
@@ -141,7 +141,7 @@ def new_gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, shi
             d_g_row = d_g.iloc[0]
             check_event = event_roll(o_off, d_off, o_def, d_def, my_event_roll_modifier)
             # print(f"{o_city} is looking for a chance...")
-            time += rand.randint(7,10)
+            time += rand.randint(5,8)
             if check_event == True:
                 # print(f"{o_city} has an opportunity!")
                 player = pick_shooter(o_off, o_def)
@@ -152,6 +152,8 @@ def new_gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, shi
                         # print(f"{player['Name']} {player['Surname']} just passed, so in an effort to not pass to himself, the player is being reassigned.")
                         while player['PlayerID'] == just_passed:
                             player = pick_shooter(o_off, o_def)
+                    else:
+                        pass
                 just_passed = player['PlayerID']
                 pass_chance = pass_or_shoot(player)
                 if pass_chance[0] == True and opening == True:
@@ -161,16 +163,15 @@ def new_gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, shi
                     # print(f"{player['Name']} {player['Surname']} chooses to pass")
                     assists.append(player)
                     # print(make_list(assists))
-                    if (pass_chance[1]*100 < rand.randint(1, 1000)):
-                        opening = True
-                        my_event_roll_modifier, my_shot_mod = my_event_roll_modifier*pass_chance[1], my_shot_mod*pass_chance[2]
+                    if (pass_chance[1]*100 < rand.randint(1, 100)):
+                        my_event_roll_modifier, my_shot_mod, opening = my_event_roll_modifier*pass_chance[1], my_shot_mod*pass_chance[2], True
                         continue
                     else:
-                        my_event_roll_modifier, my_shot_mod = my_event_roll_modifier*pass_chance[1], my_shot_mod*pass_chance[2]
+                        my_event_roll_modifier, my_shot_mod, opening = my_event_roll_modifier*pass_chance[1], my_shot_mod*pass_chance[2], False
                         continue
                 opening = False
                 shot_chance = shot(player, d_g, my_shot_mod)
-                time += rand.randint(3,6)
+                time += rand.randint(1,4)
                 if shot_chance == True:
                     print(f'{player["Name"]} {player["Surname"]} ({player["POS"]}, {player["Team"]}, {player["PlayerType"]}, line {player["Line"]}) scores on {d_g_row["Name"]} {d_g_row["Surname"]}.')
                     last_two_assists = assists[-2:]
@@ -201,7 +202,7 @@ def new_gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, shi
                     my_event_roll_modifier, my_shot_mod = 1, 1
                     continue
                 else:
-                    time += rand.randint(5,8)
+                    time += rand.randint(3,6)
                     # print(f'{player["Name"]} {player["Surname"]} had a chance to score, but the save was made by {d_g_row["Name"]} {d_g_row["Surname"]}.')
                     rebound_roll_variable = rebound_roll(d_g)
                     my_event_roll_modifier, my_shot_mod = 1, 1

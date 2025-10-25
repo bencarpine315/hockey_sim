@@ -87,7 +87,7 @@ def single_game(teams: dict, teama: str, teamb: str):
     team_1_shots = first_line[2]+second_line[2]+third_line[2]+fourth_line_1[2]+fourth_line_2[2]+fourth_line_3[2]
     team_2_shots = first_line[3]+second_line[3]+third_line[3]+fourth_line_1[3]+fourth_line_2[3]+fourth_line_3[3]
 
-    print(f"{team1[9]} scored {team_1_score} on {team_1_shots} shots and {team2[9]} scored {team_2_score} on {team_2_shots} shots at the end of regulation.")
+    print(f"{team1[9]} scored {team_1_score} on {team_1_shots} shots and {team2[9]} scored {team_2_score} on {team_2_shots} shots at the end of regulation.\n")
     
     if team_1_score == team_2_score:
         ot_line = new_gameplay(team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], 300, True, team1[9], team1[10], team2[9], team2[10])
@@ -100,4 +100,4 @@ def single_game(teams: dict, teama: str, teamb: str):
 
 # single_game(teams, "bos", "buf") ## Test case
 
-single_game(teams, "bos", "buf")
+single_game(teams, "tor", "bos")
