@@ -55,11 +55,23 @@ buf_line8 = df[(df["Line"] == 8) & (df["Team"] == "BUF")]
 buf_line9 = df[(df["Line"] == 9) & (df["Team"] == "BUF")]
 buf = [buf_line1, buf_line2, buf_line3, buf_line4, buf_line5, buf_line6, buf_line7, buf_line8, buf_line9, "Buffalo", "Sabres"]
 
+det_line1 = df[(df["Line"] == 1) & (df["Team"] == "DET")]
+det_line2 = df[(df["Line"] == 2) & (df["Team"] == "DET")]
+det_line3 = df[(df["Line"] == 3) & (df["Team"] == "DET")]
+det_line4 = df[(df["Line"] == 4) & (df["Team"] == "DET")]
+det_line5 = df[(df["Line"] == 5) & (df["Team"] == "DET")]
+det_line6 = df[(df["Line"] == 6) & (df["Team"] == "DET")]
+det_line7 = df[(df["Line"] == 7) & (df["Team"] == "DET")]
+det_line8 = df[(df["Line"] == 8) & (df["Team"] == "DET")]
+det_line9 = df[(df["Line"] == 9) & (df["Team"] == "DET")]
+det = [det_line1, det_line2, det_line3, det_line4, det_line5, det_line6, det_line7, det_line8, det_line9, "Detroit", "Red Wings"]
+
 teams = {
     "bos" : bos,
     "tor" : tor,
     "ott" : ott,
-    "buf" : buf
+    "buf" : buf,
+    "det" : det
 }
 
 def single_game(teams: dict, teama: str, teamb: str):
@@ -100,4 +112,4 @@ def single_game(teams: dict, teama: str, teamb: str):
 
 # single_game(teams, "bos", "buf") ## Test case
 
-single_game(teams, "tor", "bos")
+single_game(teams, "bos", "det")
