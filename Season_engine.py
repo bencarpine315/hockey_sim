@@ -100,4 +100,4 @@ def single_game(teams: dict, teama: str, teamb: str):
 
 # single_game(teams, "bos", "buf") ## Test case
 
-single_game(teams, "bos", "tor")
+single_game(teams, "bos", "buf")

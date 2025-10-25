@@ -130,13 +130,13 @@ def new_gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, shi
                 # print(f"{a_city} wins the faceoff")
                 center = get_pos(a_team_o, a_team_d, "C")
                 assists = [center]
-                o_off, o_def, d_off, d_def, d_g, o_city, d_city = a_team_o, a_team_d, b_team_o, b_team_d, b_team_g, a_city, b_city
+                o_off, o_def, d_off, d_def, o_g, d_g, o_city, d_city = a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, a_city, b_city
                 continue
             else:
                 # print(f"{b_city} wins the faceoff")
                 center = get_pos(b_team_o, b_team_d, "C")
                 assists = [center]
-                o_off, o_def, d_off, d_def, d_g, o_city, d_city = b_team_o, b_team_d, a_team_o, a_team_d, a_team_g, b_city, a_city
+                o_off, o_def, d_off, d_def, o_g, d_g, o_city, d_city = b_team_o, b_team_d, a_team_o, a_team_d, b_team_g, a_team_g, b_city, a_city
         else:
             d_g_row = d_g.iloc[0]
             check_event = event_roll(o_off, d_off, o_def, d_def, my_event_roll_modifier)
@@ -230,12 +230,12 @@ def new_gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, shi
                 if rand.randint(0,1)==0:
                     ld = get_pos(d_off, d_def, "LD")
                     assists = [ld]
-                    o_off, o_def, d_off, d_def, o_city, d_city = d_off, d_def, o_off, o_def, d_city, o_city
+                    o_off, o_def, d_off, d_def, o_g, d_g, o_city, d_city = d_off, d_def, o_off, o_def, d_g, o_g, d_city, o_city
                     continue
                 else:
                     rd = get_pos(d_off, d_def, "RD")
                     assists = [rd]
-                    o_off, o_def, d_off, d_def, o_city, d_city = d_off, d_def, o_off, o_def, d_city, o_city
+                    o_off, o_def, d_off, d_def, o_g, d_g, o_city, d_city = d_off, d_def, o_off, o_def, d_g, o_g, d_city, o_city
                     continue
 
     # print(f"Team A scored {a_score} on {a_shots} and Team B scored {b_score} on {b_shots} in this period.\n\n\n")
