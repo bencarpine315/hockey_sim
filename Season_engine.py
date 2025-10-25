@@ -75,12 +75,12 @@ def single_game(teams: dict, teama: str, teamb: str):
             break
         else:
             continue
-    first_line = new_gameplay(team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], 20*60, False)
-    second_line = new_gameplay(team1[1], team1[5], team2[1], team2[5], team1[7], team2[7], 17*60, False)
-    third_line = new_gameplay(team1[2], team1[6], team2[2], team2[6], team1[7], team2[7], 15*60, False)
-    fourth_line_1 = new_gameplay(team1[3], team1[4], team2[3], team2[4], team1[7], team2[7], 4*60, False)
-    fourth_line_2 = new_gameplay(team1[3], team1[5], team2[3], team2[5], team1[7], team2[7], 3*60, False)
-    fourth_line_3 = new_gameplay(team1[3], team1[6], team2[3], team2[6], team1[7], team2[7], 2*60, False)
+    first_line = new_gameplay(team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], 20*60, False, team1[9], team1[10], team2[9], team2[10])
+    second_line = new_gameplay(team1[1], team1[5], team2[1], team2[5], team1[7], team2[7], 17*60, False, team1[9], team1[10], team2[9], team2[10])
+    third_line = new_gameplay(team1[2], team1[6], team2[2], team2[6], team1[7], team2[7], 15*60, False, team1[9], team1[10], team2[9], team2[10])
+    fourth_line_1 = new_gameplay(team1[3], team1[4], team2[3], team2[4], team1[7], team2[7], 4*60, False, team1[9], team1[10], team2[9], team2[10])
+    fourth_line_2 = new_gameplay(team1[3], team1[5], team2[3], team2[5], team1[7], team2[7], 3*60, False, team1[9], team1[10], team2[9], team2[10])
+    fourth_line_3 = new_gameplay(team1[3], team1[6], team2[3], team2[6], team1[7], team2[7], 2*60, False, team1[9], team1[10], team2[9], team2[10])
 
     team_1_score = first_line[0]+second_line[0]+third_line[0]+fourth_line_1[0]+fourth_line_2[0]+fourth_line_3[0]
     team_2_score = first_line[1]+second_line[1]+third_line[1]+fourth_line_1[1]+fourth_line_2[1]+fourth_line_3[1]
@@ -90,7 +90,7 @@ def single_game(teams: dict, teama: str, teamb: str):
     print(f"{team1[9]} scored {team_1_score} on {team_1_shots} shots and {team2[9]} scored {team_2_score} on {team_2_shots} shots at the end of regulation.")
     
     if team_1_score == team_2_score:
-        ot_line = new_gameplay(team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], 300, True)
+        ot_line = new_gameplay(team1[0], team1[4], team2[0], team2[4], team1[7], team2[7], 300, True, team1[9], team1[10], team2[9], team2[10])
         team_1_score += ot_line[0]
         team_2_score += ot_line[1]
         team_1_shots += ot_line[2]
