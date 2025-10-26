@@ -7,9 +7,9 @@ def faceoff(off_line_a, off_line_b):
     b_center = off_line_b[off_line_b["POS"] == 'C']
     a_center_player = a_center.iloc[0]
     b_center_player = b_center.iloc[0]
-    faceoff_threshold = a_center_player['Faceoff'] + b_center_player['Faceoff']
-    faceoff_roll = rand.randint(0, math.ceil(faceoff_threshold))
-    if faceoff_roll < a_center_player['Faceoff']:
+    faceoff_threshold = float(a_center_player['Faceoff'] + b_center_player['Faceoff'])
+    faceoff_roll = rand.random()
+    if faceoff_roll < (a_center_player['Faceoff'] / faceoff_threshold):
         return 'A'
     else:
         return 'B'
@@ -77,18 +77,16 @@ def pass_or_shoot(player):
 
 def shot(player, goalie, shot_mod=1):
     goalie_row = goalie.iloc[0]
-    shot_sum = math.ceil(goalie_row["Goaltend"] + (0.075 * shot_mod * player["Shooting"]))
-    shot_roll = math.ceil(rand.randint(0, shot_sum))
-    if int(shot_roll) < int(goalie_row["Goaltend"])+1:
-        return False
-    else:
-        return True
+    shot_sum = int(goalie_row["Goaltend"] + (0.075 * shot_mod * player["Shooting"]))
+    shot_sum = max(1, shot_sum)
+    shot_roll = rand.randint(0, shot_sum)
+    return shot_roll > int(goalie_row["Goaltend"])
     
 def rebound_roll(goalie):
     goalie_row = goalie.iloc[0]
     rebound_chance = rand.randint(0,100)
     goalie_save = goalie_row["Goaltend"]
-    return rebound_chance < goalie_save
+    return rebound_chance > goalie_save
 
 def make_list(kinda_list):
     newlist = []
