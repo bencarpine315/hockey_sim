@@ -3,16 +3,21 @@ import random as rand
 import math
 
 def faceoff(off_line_a, off_line_b):
-    a_center = off_line_a[off_line_a["POS"] == 'C']
-    b_center = off_line_b[off_line_b["POS"] == 'C']
-    a_center_player = a_center.iloc[0]
-    b_center_player = b_center.iloc[0]
-    faceoff_threshold = float(a_center_player['Faceoff'] + b_center_player['Faceoff'])
-    faceoff_roll = rand.random()
-    if faceoff_roll < (a_center_player['Faceoff'] / faceoff_threshold):
-        return 'A'
-    else:
-        return 'B'
+    # Finds centers from each line
+    a_center = next((p for p in off_line_a if p["POS"] == "C"), None)
+    b_center = next((p for p in off_line_b if p["POS"] == "C"), None)
+    
+    if a_center is None or b_center is None:
+        raise ValueError("Faceoff error: missing center position on one line")
+    
+    # total skill determines odds
+    total = a_center['Faceoff'] + b_center['Faceoff']
+    if total <= 0:
+        # fallback - random 50/50 if both faceoff stats are zero (should never occur)
+        return rand.choice(['A', 'B'])
+    
+    # probabilistic roll
+    return 'A' if rand.random() < (a_center['Faceoff'] / total) else 'B'
 
 
 def event_roll(off_line_a, off_line_b, def_line_a, def_line_b, event_roll_modifier=1):
@@ -75,18 +80,22 @@ def pass_or_shoot(player):
     shot_chance = rand.randint(0, 50)
     return shot_chance < shot_threshold, event_mod, shot_mod
 
-def shot(player, goalie, shot_mod=1):
-    goalie_row = goalie.iloc[0]
-    shot_sum = int(goalie_row["Goaltend"] + (0.075 * shot_mod * player["Shooting"]))
-    shot_sum = max(1, shot_sum)
-    shot_roll = rand.randint(0, shot_sum)
-    return shot_roll > int(goalie_row["Goaltend"])
-    
+def shot(player: dict, goalie: dict, shot_mod: float = 1.0) -> bool:
+    # Base stats
+    shooting = float(player['Shooting'])
+    goaltend = float(goalie["Goaltend"])
+
+    adjusted_difficulty = goaltend + (0.075 * shot_mod * shooting)
+
+    roll = rand.random() * adjusted_difficulty
+    return roll > goaltend
+
 def rebound_roll(goalie):
-    goalie_row = goalie.iloc[0]
-    rebound_chance = rand.randint(0,100)
-    goalie_save = goalie_row["Goaltend"]
-    return rebound_chance > goalie_save
+    goaltend = float(goalie['Goaltend'])
+
+    rebound_probability = max(0.05, (100-goaltend) / 200)
+
+    return rand.random() < rebound_probability
 
 def make_list(kinda_list):
     newlist = []
@@ -105,6 +114,12 @@ def shootout(a_team_shooters, b_team_shooters, a_team_g, b_team_g):
     pass
 
 def new_gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, shift_time, overtime: bool, a_city, a_name, b_city, b_name):
+    a_team_o_list = a_team_o.to_dict('records')
+    b_team_o_list = b_team_o.to_dict('records')
+    a_goalie = a_team_g.iloc[0].to_dict()
+    b_goalie = b_team_g.iloc[0].to_dict()
+
+
     time=0
     a_score = 0
     a_shots = 0
@@ -124,19 +139,18 @@ def new_gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, shi
             # print("Either the time here should be 0, they should have just scored, or the puck was stopped after a shot.")
             just_stopped, just_scored = False, False
             time += 3
-            if faceoff(a_team_o, b_team_o)=='A':
+            if faceoff(a_team_o_list, b_team_o_list)=='A':
                 # print(f"{a_city} wins the faceoff")
                 center = get_pos(a_team_o, a_team_d, "C")
                 assists = [center]
-                o_off, o_def, d_off, d_def, o_g, d_g, o_city, d_city = a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, a_city, b_city
+                o_off, o_def, d_off, d_def, o_g, d_g, o_city, d_city = a_team_o, a_team_d, b_team_o, b_team_d, a_goalie, b_goalie, a_city, b_city
                 continue
             else:
                 # print(f"{b_city} wins the faceoff")
                 center = get_pos(b_team_o, b_team_d, "C")
                 assists = [center]
-                o_off, o_def, d_off, d_def, o_g, d_g, o_city, d_city = b_team_o, b_team_d, a_team_o, a_team_d, b_team_g, a_team_g, b_city, a_city
+                o_off, o_def, d_off, d_def, o_g, d_g, o_city, d_city = b_team_o, b_team_d, a_team_o, a_team_d, b_goalie, a_goalie, b_city, a_city
         else:
-            d_g_row = d_g.iloc[0]
             check_event = event_roll(o_off, d_off, o_def, d_def, my_event_roll_modifier)
             # print(f"{o_city} is looking for a chance...")
             time += rand.randint(5,8)
@@ -168,10 +182,10 @@ def new_gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, shi
                         my_event_roll_modifier, my_shot_mod, opening = my_event_roll_modifier*pass_chance[1], my_shot_mod*pass_chance[2], False
                         continue
                 opening = False
-                shot_chance = shot(player, d_g, my_shot_mod)
+                shot_chance = shot(player.to_dict(), d_g, my_shot_mod)
                 time += rand.randint(1,4)
                 if shot_chance == True:
-                    print(f'{player["Name"]} {player["Surname"]} ({player["POS"]}, {player["Team"]}, {player["PlayerType"]}, line {player["Line"]}) scores on {d_g_row["Name"]} {d_g_row["Surname"]}.')
+                    print(f'{player["Name"]} {player["Surname"]} ({player["POS"]}, {player["Team"]}, {player["PlayerType"]}, line {player["Line"]}) scores on {d_g["Name"]} {d_g["Surname"]}.')
                     last_two_assists = assists[-2:]
                     if len(last_two_assists) == 2:
                         if last_two_assists[0].equals(last_two_assists[1]):
