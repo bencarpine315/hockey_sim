@@ -107,9 +107,7 @@ def single_game(teams: dict, teama: str, teamb: str):
         team_2_score += ot_line[1]
         team_1_shots += ot_line[2]
         team_2_shots += ot_line[3]
-        print(f"Overtime elapsed: {ot_line[4]}")
+        print(f"Overtime elapsed: {ot_line[4]} seconds.")
         print(f"{team1[9]} scored {team_1_score} on {team_1_shots} shots and {team2[9]} scored {team_2_score} on {team_2_shots} shots at the end of overtime.")
 
-# single_game(teams, "bos", "buf") ## Test case
-
-single_game(teams, "bos", "det")
+single_game(teams, "det", "buf")

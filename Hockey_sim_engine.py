@@ -85,7 +85,7 @@ def shot(player: dict, goalie: dict, shot_mod: float = 1.0) -> bool:
     shooting = float(player['Shooting'])
     goaltend = float(goalie["Goaltend"])
 
-    adjusted_difficulty = goaltend + (0.075 * shot_mod * shooting)
+    adjusted_difficulty = goaltend + (0.1 * shot_mod * shooting)
 
     roll = rand.random() * adjusted_difficulty
     return roll > goaltend
