@@ -85,7 +85,7 @@ def shot(player: dict, goalie: dict, shot_mod: float = 1.0) -> bool:
     shooting = float(player['Shooting'])
     goaltend = float(goalie["Goaltend"])
 
-    adjusted_difficulty = goaltend + (0.1 * shot_mod * shooting)
+    adjusted_difficulty = goaltend + (0.09 * shot_mod * shooting)
 
     roll = rand.random() * adjusted_difficulty
     return roll > goaltend
@@ -104,21 +104,73 @@ def make_list(kinda_list):
         newlist.append(player_name)
     return newlist
 
-def powerplay(a_team_opp, a_team_dpp, b_team_opk, b_team_dpk, a_team_g, b_team_g, a_team_opp_ref, a_team_dpp_ref, b_team_opk_ref, b_team_dpk_ref, a_shots : list, b_shots : list, shift_time, assists: list, just_scored: bool, my_event_roll_modifier=1, my_shot_mod=1):
+def powerplay(a_team_opp_1, a_team_opp_2, a_team_dpp_1, a_team_dpp_2, b_team_opk_1, b_team_opk_2, b_team_dpk_1, b_team_dpk_2, a_team_g, b_team_g, overtime: bool, a_city, a_name, b_city, b_name):
     # Will eventually allow for two-minute PPs #
     # Penalties will occur randomly based off of discipline/awareness rating, yet to be added #
+    new_gameplay(a_team_opp_1, a_team_dpp_1, b_team_opk_1, b_team_dpk_1, a_team_g, b_team_g, 60, overtime, a_city, a_name, b_city, b_name)
+    new_gameplay(a_team_opp_2, a_team_dpp_2, b_team_opk_2, b_team_dpk_2, a_team_g, b_team_g, 60, overtime, a_city, a_name, b_city, b_name)
     
-    pass
     
-def shootout(a_team_shooters, b_team_shooters, a_team_g, b_team_g):
-    pass
+def shootout(a_team, b_team, a_team_g, b_team_g, a_city, b_city):
+    a_team=a_team.to_dict('records')
+    b_team=b_team.to_dict('records')
+    a_goalie = a_team_g.iloc[0].to_dict()
+    b_goalie = b_team_g.iloc[0].to_dict()
+    a_shots = 0
+    b_shots = 0
+    a_score = 0
+    b_score = 0
+    shooting_index=1
+
+    
+    
+    if a_score == b_score:
+        while a_score == b_score:
+            a_shooter = next((p for p in a_team if p["SO_Order"] == float(shooting_index)), None)
+            b_shooter = next((p for p in b_team if p['SO_Order'] == float(shooting_index)), None)
+            if shot(a_shooter, b_goalie, 1.5) == True:
+                a_score +=1
+                a_shots +=1
+                print(f"{a_shooter["Name"]} {a_shooter["Surname"]} scores!")
+            else:
+                a_shots +=1
+                print(f"{a_shooter["Name"]} {a_shooter["Surname"]} can't score.")
+
+            if shot(b_shooter, a_goalie, 1.5) == True:
+                b_score +=1
+                b_shots +=1
+                print(f"{b_shooter["Name"]} {b_shooter["Surname"]} scores!")
+            else:
+                b_shots +=1
+                print(f"{b_shooter["Name"]} {b_shooter["Surname"]} can't score.")
+    
+            if shooting_index < 18:
+                shooting_index +=1
+            elif shooting_index == 18:
+                shooting_index = 1
+
+            if a_score != b_score:
+                if a_score > b_score:
+                    print(f"{a_city} wins in an overtime shootout!")
+                    print(f"The shootout lasted {a_shots} rounds with {a_shots + b_shots} shooters taking their chances.")
+                    return a_score, b_score, a_shots, b_shots
+                elif b_score > a_score:
+                    print(f"{b_city} wins in an overtime shootout!")
+                    print(f"The shootout lasted {b_shots} rounds with {a_shots + b_shots} shooters taking their chances.")
+                    return a_score, b_score, a_shots, b_shots
+            else:
+                continue
+
+    
+
+    
+
 
 def new_gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, shift_time, overtime: bool, a_city, a_name, b_city, b_name):
     a_team_o_list = a_team_o.to_dict('records')
     b_team_o_list = b_team_o.to_dict('records')
     a_goalie = a_team_g.iloc[0].to_dict()
     b_goalie = b_team_g.iloc[0].to_dict()
-
 
     time=0
     a_score = 0
@@ -128,6 +180,8 @@ def new_gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, shi
     just_stopped = False
     just_scored = False
     opening = False
+    shorthanded = False
+    powerplay = False
     assists = []
     just_passed = None
     my_event_roll_modifier = 1
@@ -154,6 +208,12 @@ def new_gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, shi
             check_event = event_roll(o_off, d_off, o_def, d_def, my_event_roll_modifier)
             # print(f"{o_city} is looking for a chance...")
             time += rand.randint(5,8)
+            if len(o_off) > len(d_off):
+                powerplay = True
+            elif len(o_off) < len(d_off):
+                shorthanded = True
+            else:
+                powerplay, shorthanded = False, False
             if check_event == True:
                 # print(f"{o_city} has an opportunity!")
                 player = pick_shooter(o_off, o_def)
@@ -185,7 +245,16 @@ def new_gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, shi
                 shot_chance = shot(player.to_dict(), d_g, my_shot_mod)
                 time += rand.randint(1,4)
                 if shot_chance == True:
-                    print(f'{player["Name"]} {player["Surname"]} ({player["POS"]}, {player["Team"]}, {player["PlayerType"]}, line {player["Line"]}) scores on {d_g["Name"]} {d_g["Surname"]}.')
+                    try: 
+                        if powerplay == False:
+                            print(f'{player["Name"]} {player["Surname"]} ({player["POS"]}, {player["Team"]}, {player["PlayerType"]}, line {player["Line"]}) scores on {d_g["Name"]} {d_g["Surname"]}.')
+                        else:
+                            if shorthanded == False:
+                                print(f'{player["Name"]} {player["Surname"]} ({player["POS"]}, {player["Team"]}, {player["PlayerType"]}, line {player["Line"]}) scores a POWER PLAY GOAL on {d_g["Name"]} {d_g["Surname"]}.')
+                            else:
+                                print(f'{player["Name"]} {player["Surname"]} ({player["POS"]}, {player["Team"]}, {player["PlayerType"]}, line {player["Line"]}) scores a SHORT-HANDED GOAL on {d_g["Name"]} {d_g["Surname"]}.')
+                    except:
+                        print("ERROR: Unsuccessfully tried to print the goal-scorer's name.")
                     last_two_assists = assists[-2:]
                     if len(last_two_assists) == 2:
                         if last_two_assists[0].equals(last_two_assists[1]):
@@ -212,7 +281,10 @@ def new_gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, shi
                     # print(f"TEAM A SCORE: {a_score}    SHOTS {a_shots}")
                     # print(f"TEAM B SCORE: {b_score}    SHOTS {b_shots}")
                     my_event_roll_modifier, my_shot_mod = 1, 1
-                    continue
+                    if powerplay == False:
+                        continue
+                    else:
+                        return a_score, b_score, a_shots, b_shots, time
                 else:
                     time += rand.randint(3,6)
                     # print(f'{player["Name"]} {player["Surname"]} had a chance to score, but the save was made by {d_g_row["Name"]} {d_g_row["Surname"]}.')

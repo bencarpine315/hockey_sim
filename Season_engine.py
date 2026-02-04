@@ -1,4 +1,4 @@
-from Hockey_sim_engine import new_gameplay
+from Hockey_sim_engine import new_gameplay, shootout
 import pandas as pd
 
 df = pd.read_excel("NHLplayers.xlsx")
@@ -20,7 +20,12 @@ bos_line6 = df[(df["Line"] == 6) & (df["Team"] == "BOS")]
 bos_line7 = df[(df["Line"] == 7) & (df["Team"] == "BOS")]
 bos_line8 = df[(df["Line"] == 8) & (df["Team"] == "BOS")]
 bos_line9 = df[(df["Line"] == 9) & (df["Team"] == "BOS")]
-bos = [bos_line1, bos_line2, bos_line3, bos_line4, bos_line5, bos_line6, bos_line7, bos_line8, bos_line9, "Boston", "Bruins"]
+bos_pp1 = df[(df["PP_Line"]== 1) & (df["Team"] == "BOS")]
+bos_pp2 = df[(df["PP_Line"]== 2) & (df["Team"] == "BOS")]
+bos_pk1 = df[(df["PK_Line"]== 1) & (df["Team"] == "BOS")]
+bos_pk2 = df[(df["PK_Line"]== 2) & (df["Team"] == "BOS")]
+bos_shots = df[(df["SO_Order"])>0& (df["Team"] == "BOS")]
+bos = [bos_line1, bos_line2, bos_line3, bos_line4, bos_line5, bos_line6, bos_line7, bos_line8, bos_line9, "Boston", "Bruins", bos_pp1, bos_pp2, bos_pk1, bos_pk2, bos_shots]
 
 tor_line1 = df[(df["Line"] == 1) & (df["Team"] == "TOR")]
 tor_line2 = df[(df["Line"] == 2) & (df["Team"] == "TOR")]
@@ -110,4 +115,7 @@ def single_game(teams: dict, teama: str, teamb: str):
         print(f"Overtime elapsed: {ot_line[4]} seconds.")
         print(f"{team1[9]} scored {team_1_score} on {team_1_shots} shots and {team2[9]} scored {team_2_score} on {team_2_shots} shots at the end of overtime.")
 
-single_game(teams, "det", "buf")
+    if team_1_score == team_2_score:
+        shootout(pd.concat([team1[0],team1[1],team1[2],team1[3],team1[4],team1[5],team1[6]]), pd.concat([team2[0],team2[1],team2[2],team2[3],team2[4],team2[5],team2[6]]),team1[7],team2[7], team1[9],team2[9])
+
+single_game(teams, "bos", "buf")
