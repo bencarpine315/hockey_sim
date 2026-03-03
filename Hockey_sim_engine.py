@@ -19,7 +19,6 @@ def faceoff(off_line_a, off_line_b):
     # probabilistic roll
     return 'A' if rand.random() < (a_center['Faceoff'] / total) else 'B'
 
-
 def event_roll(off_line_a, off_line_b, def_line_a, def_line_b, event_roll_modifier=1):
     gross_production = off_line_a['O_Rating'].sum() + off_line_b['D_Rating'].sum() + def_line_a['O_Rating'].sum() + def_line_b['D_Rating'].sum()
     a_gross_o_rating = off_line_a['O_Rating'].sum() + def_line_a['O_Rating'].sum()
@@ -48,11 +47,11 @@ def pass_or_shoot(player):
     if player["PlayerType"] == "SNP":
         shot_threshold = 45
         event_mod = 0.6
-        shot_mod = 1.005
+        shot_mod = 1.1
     elif player["PlayerType"] == "PLY":
         shot_threshold = 15
         event_mod = 0.35
-        shot_mod = 1.11
+        shot_mod = 1.08
     elif player["PlayerType"] == "TWF":
         shot_threshold = 35
         event_mod = 0.5
@@ -109,8 +108,7 @@ def powerplay(a_team_opp_1, a_team_opp_2, a_team_dpp_1, a_team_dpp_2, b_team_opk
     # Penalties will occur randomly based off of discipline/awareness rating, yet to be added #
     new_gameplay(a_team_opp_1, a_team_dpp_1, b_team_opk_1, b_team_dpk_1, a_team_g, b_team_g, 60, overtime, a_city, a_name, b_city, b_name)
     new_gameplay(a_team_opp_2, a_team_dpp_2, b_team_opk_2, b_team_dpk_2, a_team_g, b_team_g, 60, overtime, a_city, a_name, b_city, b_name)
-    
-    
+ 
 def shootout(a_team, b_team, a_team_g, b_team_g, a_city, b_city):
     a_team=a_team.to_dict('records')
     b_team=b_team.to_dict('records')
@@ -131,18 +129,18 @@ def shootout(a_team, b_team, a_team_g, b_team_g, a_city, b_city):
             if shot(a_shooter, b_goalie, 1.5) == True:
                 a_score +=1
                 a_shots +=1
-                print(f"{a_shooter["Name"]} {a_shooter["Surname"]} scores!")
+                print(f"{a_shooter["Name"]} {a_shooter["Surname"]} ({a_shooter["Team"]}) scores!")
             else:
                 a_shots +=1
-                print(f"{a_shooter["Name"]} {a_shooter["Surname"]} can't score.")
+                print(f"{a_shooter["Name"]} {a_shooter["Surname"]} ({a_shooter["Team"]}) can't score.")
 
             if shot(b_shooter, a_goalie, 1.5) == True:
                 b_score +=1
                 b_shots +=1
-                print(f"{b_shooter["Name"]} {b_shooter["Surname"]} scores!")
+                print(f"{b_shooter["Name"]} {b_shooter["Surname"]} ({b_shooter["Team"]}) scores!")
             else:
                 b_shots +=1
-                print(f"{b_shooter["Name"]} {b_shooter["Surname"]} can't score.")
+                print(f"{b_shooter["Name"]} {b_shooter["Surname"]} ({b_shooter["Team"]}) can't score.")
     
             if shooting_index < 18:
                 shooting_index +=1
@@ -161,11 +159,6 @@ def shootout(a_team, b_team, a_team_g, b_team_g, a_city, b_city):
             else:
                 continue
 
-    
-
-    
-
-
 def new_gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, shift_time, overtime: bool, a_city, a_name, b_city, b_name):
     a_team_o_list = a_team_o.to_dict('records')
     b_team_o_list = b_team_o.to_dict('records')
@@ -173,6 +166,9 @@ def new_gameplay(a_team_o, a_team_d, b_team_o, b_team_d, a_team_g, b_team_g, shi
     b_goalie = b_team_g.iloc[0].to_dict()
 
     time=0
+    home_team = pd.concat([a_team_o, a_team_d, a_team_g], ignore_index=True).to_dict('records')
+    away_team = pd.concat([b_team_o, b_team_d, b_team_g], ignore_index=True).to_dict('records')
+
     a_score = 0
     a_shots = 0
     b_score = 0

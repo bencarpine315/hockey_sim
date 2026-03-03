@@ -118,4 +118,4 @@ def single_game(teams: dict, teama: str, teamb: str):
     if team_1_score == team_2_score:
         shootout(pd.concat([team1[0],team1[1],team1[2],team1[3],team1[4],team1[5],team1[6]]), pd.concat([team2[0],team2[1],team2[2],team2[3],team2[4],team2[5],team2[6]]),team1[7],team2[7], team1[9],team2[9])
 
-single_game(teams, "bos", "buf")
+single_game(teams, "bos", "tor")
