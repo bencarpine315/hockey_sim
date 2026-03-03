@@ -1,3 +1,27 @@
+2/3/2026
+Dear reader,
+
+After a bit of a hiatus, I'm back to working on this little project. << It's not much, but it's honest work. >> I'm enjoying building a simulator for
+a sport I enjoy. 
+
+This will be tweaked if and when I can. College is hard! I don't often have much free-time to sit and work on this for more than a handful of hours a week.
+Not only that, but sometimes I run into a wall where I need to expand my own Python knowledge in order to implement a feature. This is of course time-consuming.
+Enjoybale, but takes a while. As of now, this project is sort of on the outskirts of my priorities. I'll tend to update this a bit more frequently than I have
+been over the last few months.
+
+Anyways, the newest feature I added was a shootout feature. I'd like to add a home-ice advantage, which I don't foresee being too difficult; more broadly, adding
+a powerplay/PK feature will be a bit heavier of a load to bear. Requires some reworking of the engine and how shift aggregation works. Again, feasible, but will
+take a bit more time than I have currently to fully implement.
+
+In the meantime, I have some exams to study for (including SOA's Exam FM). My February is quite loaded... maybe I can get a bit more back into this in March?
+That is most certainly the goal!
+
+- B
+
+
+
+
+10/24/2025
 Not a terribly advanced or in-depth simulator but realistic and fun to toy around with.
 XLSX file will eventually be hundreds (if not thousands) of players long. It is important to have it in the same working directory when testing file, otherwise
 there will be no dataframe to pull anything from.
@@ -25,4 +49,3 @@ for any of this, but it will be rolling out at some point in the coming weeks.
 
 
 Thanks for reading!. 
-- Ben ( 10/24/2025 )
