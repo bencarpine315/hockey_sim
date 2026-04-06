@@ -103,12 +103,14 @@ def make_list(kinda_list):
         newlist.append(player_name)
     return newlist
 
-def powerplay(a_team_opp_1, a_team_opp_2, a_team_dpp_1, a_team_dpp_2, b_team_opk_1, b_team_opk_2, b_team_dpk_1, b_team_dpk_2, a_team_g, b_team_g, overtime: bool, a_city, a_name, b_city, b_name):
-    # Will eventually allow for two-minute PPs #
-    # Penalties will occur randomly based off of discipline/awareness rating, yet to be added #
-    new_gameplay(a_team_opp_1, a_team_dpp_1, b_team_opk_1, b_team_dpk_1, a_team_g, b_team_g, 60, overtime, a_city, a_name, b_city, b_name)
-    new_gameplay(a_team_opp_2, a_team_dpp_2, b_team_opk_2, b_team_dpk_2, a_team_g, b_team_g, 60, overtime, a_city, a_name, b_city, b_name)
- 
+def powerplay():
+    #Given line's discpline ratings, (THESE NEED TO BE CREATED IN THE XLSX FILE)
+    # Determine how many powerplays occur in the aggregated time
+    # The function will then sim the powerplays
+    #   The sim will terminate if the PP team scores a goal; otherwise will run for 120 ticks (2 minutes)
+    # The return value of powerplay() will be time remaining in the aggregate and any goals scored during PP
+    pass
+
 def shootout(a_team, b_team, a_team_g, b_team_g, a_city, b_city):
     a_team=a_team.to_dict('records')
     b_team=b_team.to_dict('records')
